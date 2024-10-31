@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct TripView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-#Preview {
-    TripView()
-}
+//struct TripView: View {
+//    @EnvironmentObject var signInStatus: SignInStatus
+//    var body: some View {
+//        
+//    }
+//}
+//
+//#Preview {
+//    TripView()
+//}

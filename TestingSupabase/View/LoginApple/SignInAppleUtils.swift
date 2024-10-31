@@ -16,13 +16,11 @@ struct SignInAppleResult {
 }
 
 class SignInAppleUtils: NSObject {
-    
-    // Unhashed nonce.
     fileprivate var currentNonce: String?
     private var completionHandler: ((Result<SignInAppleResult, Error>) -> Void)?
     
+    @MainActor
     func startSignInWithAppleFlow(completion: @escaping (Result<SignInAppleResult, Error>) -> Void) {
-        
         guard let topVC = UIApplication.getTopViewController() else {
             completion(.failure(NSError()))
             return
@@ -126,8 +124,8 @@ extension UIViewController: ASAuthorizationControllerPresentationContextProvidin
     
 }
 
+@MainActor
 extension UIApplication {
-    
     class func getTopViewController(base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
         if let navigationController = base as? UINavigationController {
             return getTopViewController(base: navigationController.visibleViewController)

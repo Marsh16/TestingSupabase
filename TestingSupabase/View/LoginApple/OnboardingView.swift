@@ -1,3 +1,11 @@
+//
+//  OnboardingView.swift
+//  TestingSupabase
+//
+//  Created by Marsha Likorawung on 30/10/24.
+//
+
+
 import SwiftUI
 
 struct OnboardingView: View {

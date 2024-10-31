@@ -1,37 +1,40 @@
+//
+//  SignInView.swift
+//  TestingSupabase
+//
+//  Created by Marsha Likorawung on 30/10/24.
+//
+
+
 import SwiftUI
 import AuthenticationServices
-import Supabase
 
 struct SignInView: View {
-    let client = SupabaseClient(supabaseURL: URL(string: "your url")!, supabaseKey: "your anon key")
-
+    @EnvironmentObject var signInStatus: SignInStatus
+    let signInApple = SignInAppleUtils()
+    
     var body: some View {
-      SignInWithAppleButton { request in
-        request.requestedScopes = [.email, .fullName]
-      } onCompletion: { result in
-        Task {
-          do {
-            guard let credential = try result.get().credential as? ASAuthorizationAppleIDCredential
-            else {
-              return
+        VStack {
+            Button {
+                signInApple.startSignInWithAppleFlow { result in
+                    switch result {
+                    case .success(let appleResult):
+                        Task {
+                            try await AuthManager.shared.signInWithApple(idToken: appleResult.idToken, nonce: appleResult.nonce)
+                            signInStatus.signedIn = true
+                        }
+                    case .failure(_):
+                        print("error")
+                    }
+                }
+            } label: {
+                SignInWithAppleButton(onRequest: {_ in }, onCompletion: {_ in }).fixedSize()
             }
-
-            guard let idToken = credential.identityToken
-              .flatMap({ String(data: $0, encoding: .utf8) })
-            else {
-              return
-            }
-              try await client.auth.signInWithIdToken(
-              credentials: .init(
-                provider: .apple,
-                idToken: idToken
-              )
-            )
-          } catch {
-            dump(error)
-          }
         }
-      }
-      .fixedSize()
     }
 }
+
+#Preview {
+    SignInView()
+}
+
